@@ -1,8 +1,8 @@
 import os
-import random
 import vk_api
+import random
 import redis
-from quiz import get_quiz
+from quiz_text import get_quiz
 from vk_api.keyboard import VkKeyboard, VkKeyboardColor
 from vk_api.longpoll import VkLongPoll, VkEventType
 from vk_api.utils import get_random_id
@@ -72,6 +72,7 @@ def main():
     keyboard.add_button('Сдаться', color=VkKeyboardColor.PRIMARY)
     keyboard.add_line()
     keyboard.add_button('Мой счёт')
+
     for event in longpoll.listen():
         if event.type == VkEventType.MESSAGE_NEW and event.to_me:
             if event.text != 'Новый вопрос' and event.text != 'Сдаться':
@@ -80,7 +81,6 @@ def main():
                 get_new_question(event, vk, keyboard, r)
             if event.text == 'Сдаться':
                 give_up(event, vk, keyboard, r)
-
 
 
 if __name__ == '__main__':
