@@ -72,3 +72,6 @@
 <br>
 ```REDIS_HOST```- хост;
 
+## Пример работы ботов
+
+<img src='https://dvmn.org/filer/canonical/1569215494/324/'>
