@@ -1,7 +1,23 @@
-# TELEGRAM_ACCESS_TOKEN = 1068263397:AAHiuHrkP2vnCBdLwawbkc1FV1ZnIzbo2uY
+# Бот викторина
+У нас есть два бота: ```TelegramBot``` и ```VkontakteBot```, где вы можете взять участие в викторине.
+Попоробовать сыграть можно :
+<br>
+ ```TelegramBot``` - <a href=''>здесь,</a>
+ <br>
+```VkontakteBot``` - <a href=''>здесь.</a>
 
-REDIS_PASSWORD = leOIQVz5suSfwpSPTeRQJu8DaacoE8Ml
-REDIS_PORT = 12527
-REDIS_HOST = redis-12527.c10.us-east-1-4.ec2.cloud.redislabs.com
 
-VK_ACCESS_TOKEN =
+## Переменные окружения 
+
+```TELEGRAM_ACCESS_TOKEN```- ```Telegram``` токен;
+<br>
+```VK_ACCESS_TOKEN```- ```Vkontakte``` токен;
+<br>
+Параметры базы данных ```Redis``` :
+<br>
+```REDIS_PASSWORD ```-  пароль;
+<br>
+```REDIS_PORT```- порт;
+<br>
+```REDIS_HOST```- хост;
+
