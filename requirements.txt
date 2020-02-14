@@ -2,3 +2,4 @@ redis
 python-dotenv==0.11.0
 python-telegram-bot==12.4.2
 vk-api==11.7.0
+redis==3.4.1
