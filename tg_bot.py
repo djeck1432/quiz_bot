@@ -29,7 +29,7 @@ def get_database_connection():
 
 
 def start(update, context):
-    custom_keyboard = [['Новый вопрос', 'Сдаться'], ['Мой счёт']]
+    custom_keyboard = [['Новый вопрос']]
     update.message.reply_text(
         'Привет! Я бот для викторин!',
         reply_markup=telegram.ReplyKeyboardMarkup(custom_keyboard)
@@ -39,36 +39,53 @@ def start(update, context):
 
 
 def handle_new_question_request(update, context):
+    db = get_database_connection()
     if update.message.text == 'Новый вопрос':
         random_number = random.randint(0, len(get_quiz()) - 1)
         random_question = list(get_quiz().keys())[random_number]
-        context.bot.send_message(chat_id=update.message.chat_id, text=random_question)
-        _database.set(update.message.chat_id, random_question)
+        context.bot.send_message(
+            chat_id=update.message.chat_id,
+            text=random_question,
+            reply_markup=telegram.ReplyKeyboardMarkup([['Сдаться']])
+        )
+        db.set(update.message.chat_id, random_question)
 
     return SOLUTION_ATTEMPT
 
 
 def handle_solution_attempt(update, context):
+    db = get_database_connection()
     chat_id = update.message.chat_id
-    question = _database.get(chat_id)
+    question = db.get(chat_id)
     answer = get_quiz()[question.decode('utf-8')]
     if answer == update.message.text:
-        update.message.reply_text('Правильно! Поздравляю! Для следующего вопроса нажми «Новый вопрос»')
+        update.message.reply_text(
+            'Правильно! Поздравляю! Для следующего вопроса нажми «Новый вопрос»',
+            reply_markup=telegram.ReplyKeyboardMarkup([['Новый вопрос']]),
+        )
         return NEW_QUESTION_REQUEST
     else:
-        update.message.reply_text('Неправильно... Попробуешь ещё раз?')
+        update.message.reply_text(
+            'Неправильно... Попробуешь ещё раз?',
+            reply_markup=telegram.ReplyKeyboardMarkup([['Сдаться']])
+        )
 
 
 def handle_give_up(update, context):
+    db = get_database_connection()
     if update.message.text == 'Сдаться':
         chat_id = update.message.chat_id
-        question = _database.get(chat_id)
+        question = db.get(chat_id)
         answer = get_quiz()[question.decode('utf-8')]
-        update.message.reply_text(answer)
+        update.message.reply_text(answer,reply_markup=telegram.ReplyKeyboardMarkup([['Новый вопрос']]))
 
     random_number = random.randint(0, len(get_quiz()) - 1)
     random_question = list(get_quiz().keys())[random_number]
-    context.bot.send_message(chat_id=update.message.chat_id, text=random_question)
+    context.bot.send_message(
+        chat_id=update.message.chat_id,
+        text=random_question,
+        reply_markup=telegram.ReplyKeyboardMarkup([['Сдаться']]),
+    )
     _database.set(update.message.chat_id, random_question)
 
     return SOLUTION_ATTEMPT
@@ -90,7 +107,7 @@ def main():
         entry_points=[CommandHandler('start', start)],
         states={
             NEW_QUESTION_REQUEST: [
-                MessageHandler(Filters.regex('^(Новый вопрос|Сдаться|Мой счёт)$'), handle_new_question_request)
+                MessageHandler(Filters.regex('^(Новый вопрос)$'), handle_new_question_request)
             ],
             SOLUTION_ATTEMPT: [
                 MessageHandler(Filters.regex('^(Сдаться)$'), handle_give_up),
