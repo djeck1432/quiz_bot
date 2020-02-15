@@ -13,13 +13,19 @@ logger = logging.getLogger(__name__)
 
 NEW_QUESTION_REQUEST, SOLUTION_ATTEMPT = range(2)
 
-load_dotenv()
-redis_password = os.getenv('REDIS_PASSWORD')
-redis_port = os.getenv('REDIS_PORT')
-redis_host = os.getenv('REDIS_HOST')
+_database = None
 
-r = redis.Redis(host=redis_host, port=redis_port,
-                    password=redis_password)
+
+def get_database_connection():
+    load_dotenv()
+    global _database
+    if _database is None:
+        redis_password = os.getenv('REDIS_PASSWORD')
+        redis_port = os.getenv('REDIS_PORT')
+        redis_host = os.getenv('REDIS_HOST')
+        _database = redis.Redis(host=redis_host, port=redis_port,
+                                password=redis_password)
+    return _database
 
 
 def start(update, context):
@@ -37,14 +43,14 @@ def handle_new_question_request(update, context):
         random_number = random.randint(0, len(get_quiz()) - 1)
         random_question = list(get_quiz().keys())[random_number]
         context.bot.send_message(chat_id=update.message.chat_id, text=random_question)
-        r.set(update.message.chat_id, random_question)
+        _database.set(update.message.chat_id, random_question)
 
     return SOLUTION_ATTEMPT
 
 
 def handle_solution_attempt(update, context):
     chat_id = update.message.chat_id
-    question = r.get(chat_id)
+    question = _database.get(chat_id)
     answer = get_quiz()[question.decode('utf-8')]
     if answer == update.message.text:
         update.message.reply_text('Правильно! Поздравляю! Для следующего вопроса нажми «Новый вопрос»')
@@ -56,14 +62,14 @@ def handle_solution_attempt(update, context):
 def handle_give_up(update, context):
     if update.message.text == 'Сдаться':
         chat_id = update.message.chat_id
-        question = r.get(chat_id)
+        question = _database.get(chat_id)
         answer = get_quiz()[question.decode('utf-8')]
         update.message.reply_text(answer)
 
     random_number = random.randint(0, len(get_quiz()) - 1)
     random_question = list(get_quiz().keys())[random_number]
     context.bot.send_message(chat_id=update.message.chat_id, text=random_question)
-    r.set(update.message.chat_id, random_question)
+    _database.set(update.message.chat_id, random_question)
 
     return SOLUTION_ATTEMPT
 
@@ -76,6 +82,7 @@ def end(update, context):
 
 
 def main():
+    load_dotenv()
     telegram_token = os.getenv('TELEGRAM_ACCESS_TOKEN')
     update = Updater(telegram_token, use_context=True)
     dp = update.dispatcher
