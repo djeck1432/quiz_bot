@@ -75,12 +75,12 @@ def main():
 
     for event in longpoll.listen():
         if event.type == VkEventType.MESSAGE_NEW and event.to_me:
-            if event.text != 'Новый вопрос' and event.text != 'Сдаться':
-                get_solution_attempt(event, vk, keyboard, r)
             if event.text == 'Новый вопрос':
                 get_new_question(event, vk, keyboard, r)
-            if event.text == 'Сдаться':
+            elif event.text == 'Сдаться':
                 give_up(event, vk, keyboard, r)
+            else:
+                get_solution_attempt(event, vk, keyboard, r)
 
 
 if __name__ == '__main__':
