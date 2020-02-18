@@ -7,8 +7,7 @@ import telegram
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler
 import redis
 
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                    level=logging.INFO)
+
 logger = logging.getLogger(__name__)
 
 NEW_QUESTION_REQUEST, SOLUTION_ATTEMPT = range(2)
@@ -17,7 +16,6 @@ _database = None
 
 
 def get_database_connection():
-    load_dotenv()
     global _database
     if _database is None:
         redis_password = os.getenv('REDIS_PASSWORD')
@@ -41,8 +39,7 @@ def start(update, context):
 def handle_new_question_request(update, context):
     db = get_database_connection()
     if update.message.text == 'Новый вопрос':
-        random_number = random.randint(0, len(get_quiz()) - 1)
-        random_question = list(get_quiz().keys())[random_number]
+        random_question = random.choice(list(get_quiz().keys()))
         context.bot.send_message(
             chat_id=update.message.chat_id,
             text=random_question,
@@ -77,10 +74,9 @@ def handle_give_up(update, context):
         chat_id = update.message.chat_id
         question = db.get(chat_id)
         answer = get_quiz()[question.decode('utf-8')]
-        update.message.reply_text(answer,reply_markup=telegram.ReplyKeyboardMarkup([['Новый вопрос']]))
+        update.message.reply_text(answer, reply_markup=telegram.ReplyKeyboardMarkup([['Новый вопрос']]))
 
-    random_number = random.randint(0, len(get_quiz()) - 1)
-    random_question = list(get_quiz().keys())[random_number]
+    random_question = random.choice(list(get_quiz().keys()))
     context.bot.send_message(
         chat_id=update.message.chat_id,
         text=random_question,
@@ -99,6 +95,9 @@ def end(update, context):
 
 
 def main():
+    logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                        level=logging.INFO)
+
     load_dotenv()
     telegram_token = os.getenv('TELEGRAM_ACCESS_TOKEN')
     update = Updater(telegram_token, use_context=True)
