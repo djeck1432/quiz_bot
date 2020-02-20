@@ -10,8 +10,7 @@ from dotenv import load_dotenv
 
 
 def get_new_question(event, vk, keyboard, r):
-    random_number = random.randint(0, len(get_quiz()) - 1)
-    random_question = list(get_quiz().keys())[random_number]
+    random_question = random.choice(list(get_quiz().keys()))
     vk.messages.send(
         user_id=event.user_id,
         random_id=get_random_id(),
