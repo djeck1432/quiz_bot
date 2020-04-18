@@ -1,27 +1,25 @@
 # Бот викторина
-У нас есть два бота: ```TelegramBot``` и ```VkontakteBot```, где вы можете принять участие в викторине.
-Попробовать сыграть можно:
+We have two bots: ```TelegramBot``` and ```VkontakteBot```, where you can take part in a quiz. You can try playing:
 <br>
- ```TelegramBot``` - <a href='https://t.me/DevmanLesson3_bot'>здесь,</a>
+ ```TelegramBot``` - <a href='https://t.me/DevmanLesson3_bot'>here,</a>
  <br>
-```VkontakteBot``` - <a href='https://vk.com/im?media=&sel=-190053871'>здесь.</a>
+```VkontakteBot``` - <a href='https://vk.com/im?media=&sel=-190053871'>here.</a>
 
-## Инструкция по запуску кода на сервере
+## Instruction for running code on the server
 
-### Регистрация и установка Heroku
+### Registration and installation of Heroku
 
-Зарегистрируйтесь  на этом <a href='https://signup.heroku.com/dc'>сайте</a>.
+Sign up on this  <a href='https://signup.heroku.com/dc'>site</a>.
 <br>
-Для работы через терминал, установите ```CLI``` для ```Heroku```, для этого
-откройте у себя на компьютере ```bash``` и в нем пропишите следующие команды: 
+To work through the terminal install ```CLI``` for ```Heroku```, to do this you should open ``bash`` on your computer and write in there next commands: 
 <br>
-Для ```Linux``` -<br>
+For Linux  ```Linux``` -<br>
 ```sudo snap install heroku --classic```
 <br>
-Для ```MacOs``` - <br>
+For ```MacOs``` - <br>
 ```brew install heroku/brew/heroku```
 <br>
-Оставаясь в терминал, зайдите через ```bash``` в ваш аккаунт на ```Heroku```:
+Staying in the terminal, log into your account on ```Heroku``` with ```bash```:
 <br>
 ```heroku login```
 <br>
