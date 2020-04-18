@@ -1,4 +1,4 @@
-# Бот викторина
+# Bot quiz
 We have two bots: ```TelegramBot``` and ```VkontakteBot```, where you can take part in a quiz. You can try playing:
 <br>
  ```TelegramBot``` - <a href='https://t.me/DevmanLesson3_bot'>here,</a>
